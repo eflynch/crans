@@ -25,3 +25,7 @@ crans
 vcrans
 ```
 
+## How it works
+crans just decrypts your password file, shows it to you, then deletes the decryped version
+
+vcrans decrypts and executes the file ~/.vcrans.gpg which is a script which decrypts the password file, opens it in vim, re-encrypts it when you are done, and then deletes both decrypted versions
