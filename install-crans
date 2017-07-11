@@ -1,0 +1,32 @@
+#! /bin/bash
+
+# Write .vcrans file
+cat > ~/.vcrans <<EOF
+#! /bin/bash
+echo "$1" | gpg --batch --yes --passphrase-fd 0 ~/.crans.gpg
+vim ~/.crans
+echo "$1" | gpg -o ~/.crans.gpg --batch --yes --passphrase-fd 0 --cipher-algo AES256 --symmetric ~/.crans
+rm ~/.crans
+EOF
+
+# Encrypt .vcrans file
+echo "$1" | gpg -o ~/.vcrans.gpg --batch --yes --passphrase-fd 0 --cipher-algo AES256 --symmetric ~/.vcrans
+rm ~/.vcrans
+
+# Write crans file
+cat > crans <<EOF
+#! /bin/bash
+gpg "${2}.gpg" && cat "${2}" | less && rm "${2}"
+EOF
+chmod a+x crans
+
+# Write vcrans file
+cat > vcrans <<EOF
+#! /bin/bash
+gpg ~/.vcrans.gpg
+chmod a+x ~/.vcrans
+~/.vcrans
+rn ~/.vcrans
+EOF
+chmod a+x vcrans
+
