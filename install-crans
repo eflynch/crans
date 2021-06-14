@@ -1,32 +1,19 @@
 #! /bin/bash
 
-# Write .vcrans file
-cat > ~/.vcrans <<EOF
-#! /bin/bash
-echo "$1" | gpg --batch --yes --passphrase-fd 0 ~/.crans.gpg
-vim ~/.crans
-echo "$1" | gpg -o ~/.crans.gpg --batch --yes --passphrase-fd 0 --cipher-algo AES256 --symmetric ~/.crans
-rm ~/.crans
-EOF
-
-# Encrypt .vcrans file
+# write ~/.vcrans.gpg
+echo "echo '$1' | gpg --decrypt --passphrase-fd 0 '${2}.gpg' > '${2}' && vim '${2}' && echo '$1' | gpg -o '${2}.gpg' --batch --yes --passphrase-fd 0 --cipher-algo AES256 --symmetric '${2}' && rm '${2}'" > ~/.vcrans
 echo "$1" | gpg -o ~/.vcrans.gpg --batch --yes --passphrase-fd 0 --cipher-algo AES256 --symmetric ~/.vcrans
 rm ~/.vcrans
 
+# write secret file
+touch "${2}"
+echo "$1" | gpg -o "${2}.gpg" --batch --yes --passphrase-fd 0 --cipher-algo AES256 --symmetric "${2}"
+
 # Write crans file
-cat > crans <<EOF
-#! /bin/bash
-gpg "${2}.gpg" && cat "${2}" | less && rm "${2}"
-EOF
+printf "#! /usr/bin/env bash\n gpg --decrypt '${2}.gpg'" > crans
 chmod a+x crans
 
 # Write vcrans file
-cat > vcrans <<EOF
-#! /bin/bash
-gpg ~/.vcrans.gpg
-chmod a+x ~/.vcrans
-~/.vcrans
-rn ~/.vcrans
-EOF
+printf '#! /usr/bin/env bash\neval $(gpg --decrypt ~/.vcrans.gpg)' > vcrans
 chmod a+x vcrans
 

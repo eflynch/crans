@@ -1,0 +1,8 @@
+#! /bin/bash
+
+rm crans
+rm vcrans
+rm "${1}.gpg"
+rm "${1}"
+rm ~/.vcrans.gpg
+rm ~/.vcrans
